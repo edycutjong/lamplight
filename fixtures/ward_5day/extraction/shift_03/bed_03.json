@@ -1,0 +1,1 @@
+{"episodes":[{"bed":3,"decay_class":"routine","entities":["sleep","vitals"],"id":"ep-03-03-1","polarity":"neutral","resolves":null,"shift":3,"text":"Slept in two stretches, repositioned 0200, voided x1, vitals stable and afebrile.","ts":"2026-06-02T00:30:00Z","type":"observation","why_hint":null}],"note_sha256":"a09f009ecedc61c6e7b49df4ec9f9d2b3072fd39c9da0ef9f534bb14c1904766"}

@@ -1,0 +1,1 @@
+{"episodes":[{"bed":9,"decay_class":"routine","entities":["cellulitis","sleep","vitals"],"id":"ep-09-09-1","polarity":"neutral","resolves":null,"shift":9,"text":"Slept well, afebrile; obs stable; leg elevation maintained.","ts":"2026-06-04T00:30:00Z","type":"observation","why_hint":null}],"note_sha256":"3dd11bed5cfe903cbc2c309e99d0f7481db92ed47c6e88dc6cdf4294f3b45c32"}

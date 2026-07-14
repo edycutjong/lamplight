@@ -1,0 +1,56 @@
+# Serverless Devs spec for deploying the Lamplight API to Alibaba Function
+# Compute (HTTP-triggered, Python 3.12 custom runtime).
+#
+# STATUS: scaffold, NOT deployed in this timebox (see PROOF.md). The command
+# sequence below is the intended path; `s deploy` requires Alibaba Cloud
+# credentials (ALIBABA_CLOUD_ACCESS_KEY_ID / _SECRET) and a configured region.
+#
+#   npm i -g @serverless-devs/s
+#   s deploy               # provisions the function + HTTP trigger
+#   s invoke -e '{}'       # smoke test
+#
+edition: 3.0.0
+name: lamplight
+access: default
+
+vars:
+  region: ap-southeast-1                 # Singapore (intl DashScope endpoint)
+  functionName: lamplight-brief
+
+resources:
+  lamplight:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: ${vars.functionName}
+      description: "Lamplight cross-shift memory brief builder (SYNTHETIC DATA ONLY)"
+      runtime: custom.debian10
+      cpu: 0.5
+      memorySize: 1024
+      diskSize: 512
+      timeout: 60
+      code: ./                           # build/ root (src/ + fixtures/ + api/)
+      customRuntimeConfig:
+        command:
+          - uvicorn
+        args:
+          - api.main:app
+          - --host
+          - "0.0.0.0"
+          - --port
+          - "9000"
+        port: 9000
+      environmentVariables:
+        PYTHONPATH: /code/src
+        # Secrets are injected by FC env config, never committed:
+        #   DASHSCOPE_API_KEY          (LiveQwen transport; omit for offline demo)
+        #   LAMPLIGHT_SIGNING_SEED_HEX (Ed25519 op-chain signer; pubkey committed)
+        #   LAMPLIGHT_SEAL_SEED_HEX    (ECIES episode sealing)
+      triggers:
+        - triggerName: httpTrigger
+          triggerType: http
+          triggerConfig:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
