@@ -222,6 +222,8 @@ def test_extract_builds_episodes_with_defaults_and_overrides():
     def chat_responder(**kwargs):
         assert kwargs["model"] == "qwen3.7-plus"
         assert kwargs["response_format"]["type"] == "json_schema"
+        # Qwen3 thinking mode must be explicitly OFF for this generation call.
+        assert kwargs["extra_body"] == {"enable_thinking": False}
         return _FakeChatResponse(json.dumps(payload))
 
     tr = LiveQwen(api_key="k")
@@ -252,6 +254,8 @@ def test_extract_builds_episodes_with_defaults_and_overrides():
 def test_brief_prose_returns_parsed_dict():
     def chat_responder(**kwargs):
         assert kwargs["response_format"] == {"type": "json_object"}
+        # Qwen3 thinking mode must be explicitly OFF for this generation call.
+        assert kwargs["extra_body"] == {"enable_thinking": False}
         return _FakeChatResponse(json.dumps({"sbar": "S: ...", "why_tonight": "..."}))
 
     tr = LiveQwen(api_key="k")

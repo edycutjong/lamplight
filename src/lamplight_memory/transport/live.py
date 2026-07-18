@@ -72,7 +72,17 @@ class LiveQwen(Transport):
         self.dim = dim
         from openai import OpenAI  # lazy import: offline paths never need it
 
-        self.client = OpenAI(api_key=self.api_key, base_url=BASE_URL)
+        # Qwen3 models default to "thinking" mode (thousands of reasoning
+        # tokens per call, ~45s), which hangs large-prompt live runs. We turn
+        # thinking OFF explicitly on each chat call below; here we give the
+        # client a generous request timeout and a small retry budget so a slow
+        # first token fails fast rather than hanging the whole handover.
+        self.client = OpenAI(
+            api_key=self.api_key,
+            base_url=BASE_URL,
+            timeout=120.0,
+            max_retries=2,
+        )
 
     # ------------------------------------------------------------------ #
 
@@ -128,6 +138,9 @@ class LiveQwen(Transport):
                 "json_schema": EXTRACTION_JSON_SCHEMA,
             },
             temperature=0.0,
+            # Structured extraction, not open-ended reasoning: keep Qwen3's
+            # thinking mode OFF so this returns in seconds, not ~45s.
+            extra_body={"enable_thinking": False},
         )
         data = json.loads(resp.choices[0].message.content)
         episodes: list[Episode] = []
@@ -167,6 +180,9 @@ class LiveQwen(Transport):
             ],
             response_format={"type": "json_object"},
             temperature=0.0,
+            # Short constrained SBAR prose from provided facts: no chain-of-
+            # thought needed. Thinking OFF to avoid the ~45s reasoning stall.
+            extra_body={"enable_thinking": False},
         )
         try:
             return json.loads(resp.choices[0].message.content)
