@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<!--
+  LAMPLIGHT — 10-slide pitch deck (Global AI Hackathon with Qwen Cloud, Track 1 · MemoryAgent)
+
+  NAVIGATION:  ← / → arrows · Space advances · ESC toggles slide-overview grid
+               P toggles presenter mode (speaker notes, bottom panel)
+               C toggles contrast-debug borders (projector check)
+  PRINT PDF:   Cmd+P / Ctrl+P → "Save as PDF" → landscape → clean 10-page deck
+               (@page is 16in × 9in; backgrounds forced)
+  ASSETS:      ../og-image.png and ../readme-hero.png are the real committed brand assets.
+  REBRAND:     edit the CSS variables in :root below.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lamplight — Pitch Deck</title>
+<meta name="description" content="10-slide pitch deck for Lamplight: the night-shift memory that never clocks out. Track 1 · MemoryAgent, Global AI Hackathon with Qwen Cloud." />
+<link rel="canonical" href="https://lamplight.edycu.dev/pitch/" />
+<meta name="theme-color" content="#101418" />
+<meta name="author" content="Edy Cu" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Lamplight" />
+<meta property="og:url" content="https://lamplight.edycu.dev/pitch/" />
+<meta property="og:title" content="Lamplight — Pitch Deck" />
+<meta property="og:description" content="Nursing shift-handoff memory that decays, forgets on purpose, and cites every claim. 458 tests · recall 0.99 vs 0.85." />
+<meta property="og:image" content="https://lamplight.edycu.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Lamplight — Pitch Deck" />
+<meta name="twitter:description" content="15 shifts → one 334/2,000-token cited brief. Forgetting on purpose, proven by 458 tests." />
+<meta name="twitter:image" content="https://lamplight.edycu.dev/og-image.png" />
+
+<link rel="icon" type="image/svg+xml" href="../icon.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ══ TOKENS — full rebrand in 30s ══ */
+:root{
+  --color-bg:#101418;
+  --color-bg-elevated:#191F26;
+  --color-primary:#F4B860;        /* lamp amber */
+  --color-primary-soft:#FDE7BF;
+  --color-accent:#2DD4BF;         /* citation teal — ≤5% of pixels */
+  --color-text:#F6F1E7;
+  --color-dim:#9AA29C;
+  --err:#F87171; --ok:#34D399; --warn:#FBBF24;
+  --font-display:'Fraunces',Georgia,'Iowan Old Style','Times New Roman',serif;
+  --font-body:'Karla','Avenir Next','Segoe UI Variable','Segoe UI',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);overflow:hidden}
+img{max-width:100%}
+body.idle{cursor:none}
+
+/* ══ STAGE: fixed 1920×1080, scaled to viewport ══ */
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--color-bg)}
+#stage{width:1920px;height:1080px;position:relative;flex:none;transform-origin:center center}
+.slide{
+  position:absolute;inset:0;width:1920px;height:1080px;padding:110px 130px;
+  display:none;flex-direction:column;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% -8%,rgba(244,184,96,.13),transparent 62%),
+    radial-gradient(ellipse 40% 35% at 8% 105%,rgba(45,212,191,.05),transparent 70%),
+    var(--color-bg);
+}
+.slide.active{display:flex}
+.slide-tag{font-family:var(--font-mono);font-size:15px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent);margin-bottom:34px}
+h1,h2{font-family:var(--font-display);font-weight:600;letter-spacing:-.014em}
+h2{font-size:84px;line-height:1.04;max-width:1350px}
+h2 em{font-style:italic;color:var(--color-primary)}
+.body-copy{margin-top:34px;font-size:27px;line-height:1.55;color:var(--color-dim);max-width:1050px}
+.body-copy strong{color:var(--color-text)}
+.mono{font-family:var(--font-mono)}
+.amber{color:var(--color-primary)}
+code.inline{font-family:var(--font-mono);font-size:.85em;color:var(--color-primary);background:rgba(244,184,96,.09);border:1px solid rgba(244,184,96,.22);border-radius:6px;padding:.05em .35em}
+
+/* speaker notes hidden by default */
+.speaker-notes{display:none}
+
+/* ══ chrome ══ */
+#counter{
+  position:fixed;right:26px;bottom:20px;z-index:60;font-family:var(--font-mono);
+  font-size:13px;color:var(--color-dim);letter-spacing:.12em;
+}
+#hint{
+  position:fixed;left:26px;bottom:20px;z-index:60;font-family:var(--font-mono);
+  font-size:12px;color:rgba(154,162,156,.6);letter-spacing:.06em;
+}
+body.presenter #notes-panel{display:flex}
+#notes-panel{
+  display:none;position:fixed;left:0;right:0;bottom:0;height:20vh;z-index:55;
+  background:rgba(14,17,21,.96);border-top:2px solid var(--color-primary);
+  padding:2vh 4vw;align-items:flex-start;gap:2vw;
+}
+#notes-panel .np-label{font-family:var(--font-mono);font-size:12px;color:var(--color-primary);letter-spacing:.2em;text-transform:uppercase;flex:none;padding-top:.5vh}
+#notes-panel .np-text{font-size:clamp(14px,1.6vh,22px);line-height:1.5;color:var(--color-text);max-width:70vw}
+body.presenter #viewport{bottom:20vh}
+body.presenter #counter,body.presenter #hint{bottom:calc(20vh + 14px)}
+
+/* contrast debug — Press C to toggle contrast debug mode */
+body.debug-contrast h1,body.debug-contrast h2,body.debug-contrast p,
+body.debug-contrast span,body.debug-contrast li,body.debug-contrast code,
+body.debug-contrast td,body.debug-contrast th{outline:1px solid rgba(45,212,191,.7)}
+
+/* ══ overview grid (ESC) ══ */
+body.overview #viewport{display:block;overflow-y:auto}
+body.overview #stage{
+  width:auto;height:auto;transform:none!important;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:26px;padding:40px;
+}
+body.overview .slide{
+  display:flex;position:relative;inset:auto;cursor:pointer;
+  width:100%;height:auto;aspect-ratio:16/9;padding:36px 42px;overflow:hidden;
+  border:1px solid rgba(246,241,231,.15);border-radius:10px;zoom:.28;
+  transition:border-color .15s;
+}
+body.overview .slide:hover{border-color:var(--color-primary)}
+body.overview #counter,body.overview #hint,body.overview #notes-panel{display:none}
+
+/* ══ SLIDE 1 — COVER ══ */
+.s-cover{justify-content:center}
+.cover-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:90px;align-items:center}
+.badge{
+  display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:16px;
+  letter-spacing:.1em;color:var(--color-text);border:1px solid rgba(244,184,96,.45);
+  border-radius:999px;padding:10px 24px;background:rgba(244,184,96,.07);margin-bottom:44px;width:max-content;
+}
+.badge .flame{color:var(--color-primary)}
+.cover-title{font-size:150px;line-height:.98;letter-spacing:-.02em}
+.cover-title .glow{color:var(--color-primary);text-shadow:0 0 60px rgba(244,184,96,.45)}
+.cover-tag{margin-top:36px;font-size:33px;color:var(--color-dim);max-width:760px;line-height:1.45}
+.cover-tag strong{color:var(--color-text)}
+.cover-meta{margin-top:52px;font-family:var(--font-mono);font-size:17px;color:var(--color-dim);display:flex;gap:34px}
+.cover-meta .dot{color:var(--ok)}
+/* terminal frame */
+.terminal-frame{background:#0B0E12;border:1px solid rgba(246,241,231,.14);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.55);overflow:hidden}
+.terminal-frame .tbar{display:flex;align-items:center;gap:8px;padding:14px 18px;background:#12161B;border-bottom:1px solid rgba(246,241,231,.08)}
+.terminal-frame .tbar i{width:13px;height:13px;border-radius:50%;display:block}
+.tbar i:nth-child(1){background:#FF5F57}.tbar i:nth-child(2){background:#FEBC2E}.tbar i:nth-child(3){background:#28C840}
+.tbar .ttitle{margin-left:12px;font-family:var(--font-mono);font-size:13px;color:var(--color-dim)}
+.terminal-frame pre{padding:26px 30px;font-family:var(--font-mono);font-size:19px;line-height:1.7;color:var(--color-text);white-space:pre-wrap}
+.terminal-frame .p{color:var(--color-accent)}
+.terminal-frame .c{color:var(--color-dim)}
+.terminal-frame .g{color:var(--ok)}
+.terminal-frame .a{color:var(--color-primary)}
+.terminal-frame .r{color:var(--err)}
+.strike{text-decoration:line-through;text-decoration-color:var(--err);text-decoration-thickness:2px;color:var(--color-dim)}
+/* cover animation: typed command + blinking cursor (rests after ~4s) */
+.cursor{display:inline-block;width:11px;height:22px;background:var(--color-primary);vertical-align:-3px;animation:blink 1.1s step-end 5;animation-fill-mode:forwards}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cover-lamp{position:absolute;right:120px;top:90px;width:120px;height:120px;opacity:.9}
+
+/* ══ SLIDE 2 — HOOK ══ */
+.s-hook{justify-content:center}
+.hook-line{font-family:var(--font-display);font-weight:600;font-size:118px;line-height:1.06;letter-spacing:-.018em;max-width:1600px}
+.hook-line .dim{color:var(--color-dim)}
+.hook-line .hot{color:var(--color-primary);font-style:italic}
+.hook-sub{margin-top:56px;font-size:26px;color:var(--color-dim);font-family:var(--font-mono)}
+
+/* ══ SLIDE 3 — PROBLEM ══ */
+.prob-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:100px;align-items:center;flex:1}
+.prob-quote{
+  border-left:4px solid var(--color-primary);padding-left:44px;font-family:var(--font-display);
+  font-style:italic;font-size:40px;line-height:1.4;color:var(--color-text);max-width:700px;
+}
+.prob-quote .who{display:block;margin-top:26px;font-family:var(--font-mono);font-style:normal;font-size:16px;color:var(--color-dim);letter-spacing:.08em}
+.prob-facts{display:grid;gap:26px}
+.prob-fact{display:flex;gap:24px;align-items:baseline}
+.prob-fact .n{font-family:var(--font-display);font-weight:600;font-size:64px;color:var(--color-primary);min-width:150px;text-align:right;font-variant-numeric:tabular-nums}
+.prob-fact .t{font-size:24px;color:var(--color-dim);max-width:520px;line-height:1.45}
+.prob-fact .t strong{color:var(--color-text)}
+
+/* ══ SLIDE 4 — SOLUTION ══ */
+.sol-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:80px;align-items:center;flex:1}
+.clean-frame{border-radius:16px;overflow:hidden;box-shadow:0 34px 90px rgba(0,0,0,.6);border:1px solid rgba(246,241,231,.14)}
+.sol-points{margin-top:40px;display:grid;gap:18px;font-size:24px;color:var(--color-dim)}
+.sol-points li{list-style:none;display:flex;gap:14px;align-items:baseline}
+.sol-points li::before{content:"→";color:var(--color-accent);font-family:var(--font-mono);flex:none}
+.sol-points strong{color:var(--color-text)}
+
+/* ══ SLIDE 5 — ARCHITECTURE ══ */
+.arch-wrap{flex:1;display:flex;align-items:center;justify-content:center;margin-top:10px}
+.arch-svg{width:1660px;height:auto}
+
+/* ══ SLIDE 6 — DEMO ══ */
+.demo-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:64px;flex:1;align-items:center;margin-top:8px}
+.demo-callouts{display:grid;gap:30px}
+.callout{display:flex;gap:20px;align-items:flex-start}
+.callout .cnum{
+  flex:none;width:44px;height:44px;border-radius:50%;background:var(--color-primary);color:#101418;
+  font-family:var(--font-mono);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 22px rgba(244,184,96,.4);
+}
+.callout .ct{font-size:22px;color:var(--color-dim);line-height:1.45;padding-top:6px}
+.callout .ct strong{color:var(--color-text)}
+.cnum-inline{
+  display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--color-primary);color:#101418;
+  font-family:var(--font-mono);font-weight:700;font-size:15px;align-items:center;justify-content:center;vertical-align:middle;
+}
+
+/* ══ SLIDE 7 — FEATURES (asymmetric) ══ */
+.featd-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:22px;flex:1;margin-top:14px;align-content:center}
+.featd{background:rgba(25,31,38,.72);border:1px solid rgba(246,241,231,.11);border-radius:14px;padding:34px 36px}
+.featd.s4{grid-column:span 4}.featd.s2{grid-column:span 2}.featd.s3{grid-column:span 3}
+.featd h3{font-family:var(--font-display);font-weight:600;font-size:31px;margin-bottom:12px}
+.featd h3 .fi{color:var(--color-primary);margin-right:10px}
+.featd.alt h3 .fi{color:var(--color-accent)}
+.featd p{font-size:20.5px;color:var(--color-dim);line-height:1.5}
+.featd .formula{margin-top:14px;font-family:var(--font-mono);font-size:19px;color:var(--color-accent)}
+
+/* ══ SLIDE 8 — WHY QWEN ══ */
+.qwen-table{margin-top:26px;width:100%;border-collapse:collapse;font-size:21.5px}
+.qwen-table th{font-family:var(--font-mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-dim);text-align:left;padding:0 22px 14px;border-bottom:1px solid rgba(246,241,231,.16)}
+.qwen-table td{padding:15px 22px;border-bottom:1px solid rgba(246,241,231,.08);color:var(--color-dim);vertical-align:top;line-height:1.4}
+.qwen-table td:first-child{font-family:var(--font-mono);font-size:19px;color:var(--color-primary);white-space:nowrap}
+.qwen-table td:nth-child(2){color:var(--color-text)}
+.qwen-note{margin-top:24px;font-size:19px;color:var(--color-dim);font-family:var(--font-mono)}
+.qwen-note b{color:var(--warn);font-weight:500}
+
+/* ══ SLIDE 9 — TRACTION ══ */
+.trac-grid{display:grid;grid-template-columns:1fr 1fr;gap:90px;flex:1;align-items:center}
+.trac-nums{display:grid;gap:38px}
+.trac-num .n{font-family:var(--font-display);font-weight:600;font-size:96px;line-height:1;color:var(--color-primary);font-variant-numeric:tabular-nums}
+.trac-num .n .sub{font-size:.38em;color:var(--color-dim);font-family:var(--font-body);font-weight:500}
+.trac-num .l{margin-top:8px;font-size:22px;color:var(--color-dim)}
+.trac-list{display:grid;gap:16px;font-size:23px;color:var(--color-dim)}
+.trac-list li{list-style:none;display:flex;gap:16px;align-items:baseline;line-height:1.45}
+.trac-list li::before{content:"✓";color:var(--ok);font-family:var(--font-mono);flex:none;font-size:20px}
+.trac-list li.pending::before{content:"○";color:var(--warn)}
+.trac-list strong{color:var(--color-text)}
+
+/* ══ SLIDE 10 — ASK ══ */
+.s-ask{justify-content:center}
+.ask-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:90px;align-items:center}
+.ask-title{font-size:96px;line-height:1.03}
+.ask-title em{color:var(--color-primary)}
+.ask-cmds{margin-top:48px;display:grid;gap:16px}
+.ask-cmd{
+  font-family:var(--font-mono);font-size:21px;color:var(--color-text);
+  background:rgba(11,14,18,.9);border:1px solid rgba(244,184,96,.3);border-radius:12px;padding:18px 26px;
+}
+.ask-cmd .p{color:var(--color-accent)}
+.ask-cmd .c{color:var(--color-dim)}
+.ask-card{
+  background:rgba(25,31,38,.8);border:1px solid rgba(246,241,231,.14);border-radius:18px;
+  padding:52px 54px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.5);
+}
+.ask-card img.lamp{width:104px;height:104px;margin-bottom:26px}
+.ask-card .url{font-family:var(--font-mono);font-size:27px;color:var(--color-primary);letter-spacing:.02em}
+.ask-card .links{margin-top:22px;font-family:var(--font-mono);font-size:17px;color:var(--color-dim);line-height:2}
+.ask-card .links b{color:var(--color-text);font-weight:500}
+.ask-closer{margin-top:44px;font-family:var(--font-display);font-style:italic;font-size:30px;color:var(--color-dim)}
+.ask-closer b{color:var(--color-text);font-weight:600}
+
+/* ══ PRINT ══ */
+@page{size:16in 9in landscape;margin:0}
+@media print{
+  html,body{overflow:visible;height:auto;background:var(--color-bg);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #viewport{position:static;display:block}
+  #stage{width:auto;height:auto;transform:none!important;display:block}
+  .slide{
+    display:flex!important;position:relative;inset:auto;width:1920px;height:1080px;
+    page-break-inside:avoid;break-inside:avoid;page-break-after:always;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    zoom:.8; /* 1920px → 16in @ 96dpi */
+  }
+  #counter,#hint,#notes-panel,.speaker-notes{display:none!important}
+  .cursor{animation:none}
+}
+@media (prefers-reduced-motion:reduce){.cursor{animation:none}}
+</style>
+</head>
+<body>
+<div id="viewport">
+<div id="stage">
+
+  <!-- ═══ 01 · COVER ═══ -->
+  <section class="slide s-cover active" data-idx="0">
+    <img class="cover-lamp" src="../icon.svg" alt="" />
+    <div class="cover-grid">
+      <div>
+        <span class="badge"><span class="flame">🏮</span> Built for the Global AI Hackathon with Qwen Cloud</span>
+        <h1 class="cover-title">Lamp<span class="glow">light</span></h1>
+        <p class="cover-tag"><strong>The night-shift memory that never clocks out.</strong> A cross-shift clinical memory agent that decays, forgets on purpose, and cites every claim.</p>
+        <p class="cover-meta"><span>Track 1 · MemoryAgent</span><span><span class="dot">●</span> offline · zero keys</span><span>Edy Cu · solo</span></p>
+      </div>
+      <div class="terminal-frame">
+        <div class="tbar"><i></i><i></i><i></i><span class="ttitle">lamplight — night shift</span></div>
+        <pre><span class="p">$</span> lamplight demo<span class="cursor"></span>
+<span class="c">building ward… 6 patients × 15 shifts</span>
+<span class="g">✓</span> brief · Bed 9 · shift 15 · <span class="a">334 / 2,000 tok</span>
+<span class="g">✓</span> chain verified · <span class="c">every card cited</span>
+<span class="r">✕</span> <span class="strike">IV site left forearm slightly red</span> <span class="c">(resolved s2)</span></pre>
+      </div>
+    </div>
+    <aside class="speaker-notes">This is Lamplight — a memory agent for the hardest handover in the world: the nursing night shift. Everything you'll see runs offline with zero keys, and everything is cited. Watch the last line of the terminal — the system is already forgetting something, on purpose.</aside>
+  </section>
+
+  <!-- ═══ 02 · HOOK ═══ -->
+  <section class="slide s-hook" data-idx="1">
+    <p class="slide-tag">02 · The hook</p>
+    <p class="hook-line">Six minutes of handover.<br/><span class="dim">Fourteen patients.</span><br/>At 3 AM it's <span class="hot">anaphylaxis.</span></p>
+    <p class="hook-sub">The sentence that mattered — "the rash started four hours after the new antibiotic" — never survives shift change.</p>
+    <aside class="speaker-notes">A night nurse inherits fourteen patients and a six-minute verbal handover. The one sentence that mattered gets said once, on Tuesday, and by Friday night it's gone. Memory here isn't a convenience feature — it has mortality attached.</aside>
+  </section>
+
+  <!-- ═══ 03 · PROBLEM ═══ -->
+  <section class="slide" data-idx="2">
+    <p class="slide-tag">03 · The problem</p>
+    <h2>Handover memory dies <em>three deaths.</em></h2>
+    <div class="prob-grid">
+      <blockquote class="prob-quote">
+        "Faint erythema across the right forearm… possibly related to the antibiotic."
+        <span class="who">— written once, shift 6 of 15, in a phrasing no one will search for</span>
+      </blockquote>
+      <div class="prob-facts">
+        <div class="prob-fact"><span class="n">15</span><span class="t"><strong>Fragmentation.</strong> One drug reaction is written across shifts 4, 6 and 12 — as "erythema", "red patches", and "rash".</span></div>
+        <div class="prob-fact"><span class="n">0.00</span><span class="t"><strong>Vocabulary gap.</strong> "Unsteady to the bathroom" ≠ "falls risk" — naive RAG recall on that buried thread.</span></div>
+        <div class="prob-fact"><span class="n">151</span><span class="t"><strong>No forgetting.</strong> Times a naive baseline resurfaced already-resolved items across 78 briefs — noise that buries the real risk.</span></div>
+      </div>
+    </div>
+    <aside class="speaker-notes">Three failure modes, all measured in our bench: the thread is fragmented across shifts and phrasings; the wording never matches the query — naive RAG scores literally zero on the buried falls-risk clause; and nothing ever retires, so resolved items resurface 151 times and drown out what matters.</aside>
+  </section>
+
+  <!-- ═══ 04 · SOLUTION ═══ -->
+  <section class="slide" data-idx="3">
+    <p class="slide-tag">04 · The solution</p>
+    <h2>Fifteen shifts in. <em>One cited brief out.</em></h2>
+    <div class="sol-grid">
+      <div>
+        <p class="body-copy" style="margin-top:18px">Lamplight ingests every shift's notes into per-patient episodic memory, <strong>consolidates and decays</strong> nightly, and briefs the incoming nurse in a hard <strong>2,000-token budget</strong> — every item citing its source episode.</p>
+        <ul class="sol-points">
+          <li><strong>Remembers</strong> what can kill — critical items never decay until resolved.</li>
+          <li><strong>Forgets</strong> what's done — resolved items visibly retire, struck through.</li>
+          <li><strong>Proves</strong> both — every memory op is a signed, hash-chained ledger entry.</li>
+        </ul>
+      </div>
+      <div class="clean-frame">
+        <!-- Real committed brand asset: the hero render of the brief -->
+        <img src="../readme-hero.png" alt="Lamplight hero — the night-shift memory that never clocks out" />
+      </div>
+    </div>
+    <aside class="speaker-notes">The product is one artifact: the handover brief. Budgeted so it fits a real handover, cited so it can be trusted, and decayed so it stays clean. Remember, forget, prove — those three verbs are the whole system.</aside>
+  </section>
+
+  <!-- ═══ 05 · HOW IT WORKS ═══ -->
+  <section class="slide" data-idx="4">
+    <p class="slide-tag">05 · How it works</p>
+    <h2 style="font-size:66px">Notes go in. A <em>signed, cited, budgeted</em> brief comes out.</h2>
+    <div class="arch-wrap">
+      <svg class="arch-svg" viewBox="0 0 1660 560" role="img" aria-label="Architecture: ingest, extract, episodic store, nightly decay and consolidation, rerank, budget knapsack, citation validator, SBAR brief, all logged to a signed hash-chained ledger" font-family="'JetBrains Mono',monospace">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#9AA29C"/>
+          </marker>
+          <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#F4B860"/>
+          </marker>
+        </defs>
+        <!-- INGEST -->
+        <g>
+          <rect x="20" y="140" width="230" height="110" rx="12" fill="#191F26" stroke="#9AA29C" stroke-opacity=".4"/>
+          <text x="135" y="185" text-anchor="middle" fill="#F6F1E7" font-size="21">notes / voice</text>
+          <text x="135" y="215" text-anchor="middle" fill="#9AA29C" font-size="15">fun-asr · diarized</text>
+        </g>
+        <!-- EXTRACT -->
+        <g>
+          <rect x="320" y="140" width="230" height="110" rx="12" fill="#191F26" stroke="#9AA29C" stroke-opacity=".4"/>
+          <text x="435" y="185" text-anchor="middle" fill="#F6F1E7" font-size="21">extract → seal</text>
+          <text x="435" y="215" text-anchor="middle" fill="#9AA29C" font-size="15">qwen3.7-plus · ECIES</text>
+        </g>
+        <!-- STORE -->
+        <g>
+          <rect x="620" y="110" width="270" height="170" rx="16" fill="#101418" stroke="#F4B860" stroke-width="2"/>
+          <text x="755" y="165" text-anchor="middle" fill="#F4B860" font-size="23" font-weight="700">episodic store</text>
+          <text x="755" y="196" text-anchor="middle" fill="#9AA29C" font-size="15">SQLite + cosine</text>
+          <text x="755" y="222" text-anchor="middle" fill="#9AA29C" font-size="15">text-embedding-v4</text>
+          <text x="755" y="252" text-anchor="middle" fill="#2DD4BF" font-size="15">strength(t)=s₀·2^(−Δt/λ)</text>
+        </g>
+        <!-- NIGHTLY LOOP -->
+        <g>
+          <rect x="620" y="330" width="270" height="120" rx="12" fill="#191F26" stroke="#2DD4BF" stroke-opacity=".6"/>
+          <text x="755" y="372" text-anchor="middle" fill="#2DD4BF" font-size="19">nightly close</text>
+          <text x="755" y="400" text-anchor="middle" fill="#9AA29C" font-size="15">contradict · consolidate</text>
+          <text x="755" y="424" text-anchor="middle" fill="#9AA29C" font-size="15">decay sweep · Batch −50%</text>
+        </g>
+        <path d="M710 280 v50" stroke="#2DD4BF" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M800 330 v-50" stroke="#2DD4BF" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <!-- RERANK -->
+        <g>
+          <rect x="960" y="140" width="200" height="110" rx="12" fill="#191F26" stroke="#9AA29C" stroke-opacity=".4"/>
+          <text x="1060" y="185" text-anchor="middle" fill="#F6F1E7" font-size="21">top-40 → rerank</text>
+          <text x="1060" y="215" text-anchor="middle" fill="#9AA29C" font-size="15">qwen3-rerank</text>
+        </g>
+        <!-- KNAPSACK -->
+        <g>
+          <rect x="1230" y="140" width="190" height="110" rx="12" fill="#191F26" stroke="#9AA29C" stroke-opacity=".4"/>
+          <text x="1325" y="185" text-anchor="middle" fill="#F6F1E7" font-size="21">knapsack</text>
+          <text x="1325" y="215" text-anchor="middle" fill="#9AA29C" font-size="15">≤ 2,000 tok · I3</text>
+        </g>
+        <!-- VALIDATOR + BRIEF -->
+        <g>
+          <rect x="1490" y="110" width="150" height="170" rx="16" fill="#101418" stroke="#F4B860" stroke-width="2"/>
+          <text x="1565" y="160" text-anchor="middle" fill="#F4B860" font-size="21" font-weight="700">citation</text>
+          <text x="1565" y="188" text-anchor="middle" fill="#F4B860" font-size="21" font-weight="700">validator</text>
+          <text x="1565" y="220" text-anchor="middle" fill="#9AA29C" font-size="15">I1–I2 · reject,</text>
+          <text x="1565" y="244" text-anchor="middle" fill="#9AA29C" font-size="15">never patch</text>
+        </g>
+        <text x="1565" y="330" text-anchor="middle" fill="#F6F1E7" font-size="21">SBAR brief ▸</text>
+        <path d="M1565 280 v22" stroke="#F4B860" stroke-width="2" marker-end="url(#arrA)" fill="none"/>
+        <!-- main flow arrows -->
+        <path d="M250 195 h62" stroke="#9AA29C" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M550 195 h62" stroke="#9AA29C" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M890 195 h62" stroke="#9AA29C" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M1160 195 h62" stroke="#9AA29C" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <path d="M1420 195 h62" stroke="#9AA29C" stroke-width="2" marker-end="url(#arr)" fill="none"/>
+        <!-- LEDGER RAIL -->
+        <rect x="20" y="500" width="1620" height="46" rx="10" fill="none" stroke="#F4B860" stroke-dasharray="7 7" stroke-opacity=".7"/>
+        <text x="830" y="530" text-anchor="middle" fill="#F4B860" font-size="18">every memory op → Ed25519-signed, hash-chained ledger · 1-byte tamper fails verify-chain (I4) · byte-identical replay (I5)</text>
+        <path d="M755 450 v42" stroke="#F4B860" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrA)" fill="none"/>
+        <!-- transport note -->
+        <text x="20" y="80" fill="#9AA29C" font-size="16">transport: FakeQwen (default — offline, deterministic, zero keys)  ·  LiveQwen (qwen3.7-plus · text-embedding-v4 · qwen3-rerank · fun-asr, behind DASHSCOPE_API_KEY)</text>
+      </svg>
+    </div>
+    <aside class="speaker-notes">Left to right: notes and diarized voice become sealed episodes in a per-patient store. A nightly loop consolidates, flags contradictions, and decays. At handover: two-stage retrieval, a token knapsack, and a mechanical citation validator that rejects rather than patches. The amber rail at the bottom is the point — every operation, including forgetting, is signed into a hash chain.</aside>
+  </section>
+
+  <!-- ═══ 06 · LIVE DEMO ═══ -->
+  <section class="slide" data-idx="5">
+    <p class="slide-tag">06 · Live demo — real output, replayed byte-identically</p>
+    <h2 style="font-size:62px">Watch it <em>forget on purpose.</em></h2>
+    <div class="demo-grid">
+      <div class="terminal-frame">
+        <div class="tbar"><i></i><i></i><i></i><span class="ttitle">lamplight demo — Bed 9 · shift 15</span></div>
+        <pre style="font-size:20px"><span class="p">$</span> lamplight demo
+<span class="c">HANDOVER BRIEF · Bed 9 · for shift 15 · budget</span> <span class="a">334/2,000 tok</span>  <span class="cnum-inline">3</span>
+
+<span class="r">#1 CRITICAL</span> cefazolin — thread across 3 notes  <span class="cnum-inline">1</span>
+   <span class="a">[s04]</span> 1 g IV q8h started for cellulitis; tolerated
+   <span class="a">[s06]</span> faint erythema right forearm — new, ?antibiotic
+   <span class="a">[s12]</span> red patches again at 0400; "is it a rash?"
+   <span class="c">why tonight: next dose due 0200 — confirm before hung</span>
+
+<span class="c">#2 routine</span>  oral switch planned if bloods hold <span class="a">[s14]</span>
+
+<span class="c">RETIRED — never cited again</span>  <span class="cnum-inline">2</span>
+   <span class="strike">IV site left forearm slightly red — watching</span> <span class="c">(resolved s2)</span>
+
+<span class="g">✓ chain verified · 458 tests · replay byte-identical</span>  <span class="cnum-inline">4</span></pre>
+      </div>
+      <div class="demo-callouts">
+        <div class="callout"><span class="cnum">1</span><p class="ct"><strong>The stitched thread.</strong> Erythema / red patches / rash — three phrasings, shifts 4→6→12, consolidated into one critical card, each source cited.</p></div>
+        <div class="callout"><span class="cnum">2</span><p class="ct"><strong>The strikethrough.</strong> The resolved IV-site concern is retired — deliberately absent from the brief and mechanically impossible to cite.</p></div>
+        <div class="callout"><span class="cnum">3</span><p class="ct"><strong>The budget meter.</strong> 334 of 2,000 tokens — a hard invariant (I3), never exceeded across all 78 benched briefs.</p></div>
+        <div class="callout"><span class="cnum">4</span><p class="ct"><strong>The proof.</strong> Signed op-chain verifies; <span class="mono">verify_offline.py</span> replays it all with the network off.</p></div>
+      </div>
+    </div>
+    <aside class="speaker-notes">This is the actual demo output, rebuilt byte-identically from committed fixtures. Card one is the cefazolin thread stitched across three shifts. And the beat judges remember: the strikethrough. The system forgot the resolved item on purpose — and can prove exactly when.</aside>
+  </section>
+
+  <!-- ═══ 07 · KEY FEATURES ═══ -->
+  <section class="slide" data-idx="6">
+    <p class="slide-tag">07 · What's under the lamp</p>
+    <h2 style="font-size:62px">Five mechanisms, five <em>tested invariants.</em></h2>
+    <div class="featd-grid">
+      <div class="featd s4">
+        <h3><span class="fi">◐</span>Decay with real half-life math</h3>
+        <p>Critical never decays until resolved + confirmed; condition λ = 72 h; routine λ = one shift. Sub-0.05 strength is swept by a <em>signed</em> expire op.</p>
+        <p class="formula">strength(t) = s₀ · 2^(−Δt/λ)</p>
+      </div>
+      <div class="featd s2 alt">
+        <h3><span class="fi">▣</span>Budget-knapsack brief</h3>
+        <p>Value = rerank × decay × criticality, greedy-packed into 2,000 tokens — and it logs what it left out, and why. (I3)</p>
+      </div>
+      <div class="featd s2 alt">
+        <h3><span class="fi">✓</span>Citation validator</h3>
+        <p>Uncited cards, or cards citing resolved/expired episodes, are rejected — never patched. (I1–I2)</p>
+      </div>
+      <div class="featd s4">
+        <h3><span class="fi">⛓</span>Ed25519 hash-chained ops ledger</h3>
+        <p>Write, consolidate, decay, contradict, expire — each a signed chain entry. "Who knew what, when — and when the system forgot" is a signed fact; a 1-byte tamper fails verify-chain. (I4)</p>
+      </div>
+      <div class="featd s3">
+        <h3><span class="fi">↻</span>Byte-identical replay</h3>
+        <p>Rebuild the 15-shift ward from fixtures and byte-compare the hero brief — under a socket guard where any network call raises. (I5)</p>
+      </div>
+      <div class="featd s3 alt">
+        <h3><span class="fi">◈</span>Domain-agnostic engine</h3>
+        <p><span class="mono">lamplight-memory</span> has nothing clinical inside — the repo rebuilds it as an on-call support handover in ~15 lines.</p>
+      </div>
+    </div>
+    <aside class="speaker-notes">Every feature maps to a numbered invariant with a named test. That's the design stance: forgetting, budgeting, and citing aren't prompt suggestions — they're mechanical guarantees a test suite can hold.</aside>
+  </section>
+
+  <!-- ═══ 08 · WHY QWEN CLOUD ═══ -->
+  <section class="slide" data-idx="7">
+    <p class="slide-tag">08 · Why now · why Qwen Cloud</p>
+    <h2 style="font-size:62px">Remove Qwen Cloud and it's <em>four vendors and a cron job.</em></h2>
+    <table class="qwen-table">
+      <thead><tr><th>Qwen surface</th><th>Role in Lamplight</th><th>Without it</th></tr></thead>
+      <tbody>
+        <tr><td>qwen3.7-plus</td><td>episode extraction + SBAR prose</td><td>flash-tier negation errors ("no rash" → rash) are clinical poison</td></tr>
+        <tr><td>text-embedding-v4 + qwen3-rerank</td><td>two-stage retrieval: recall@40 cheap, precision@5 where it counts</td><td>single-stage retrieval <em>is</em> the 0.85 baseline we beat</td></tr>
+        <tr><td>structured output + function calling</td><td>Episode/BriefCard schemas · typed, signed memory ops</td><td>nothing mechanical to validate; forgetting as cron, not auditable transitions</td></tr>
+        <tr><td>fun-asr · Batch −50%</td><td>diarized voice handover · nightly consolidation economics</td><td>unattributed memories can't be audited; $/patient-day doubles</td></tr>
+      </tbody>
+    </table>
+    <p class="qwen-note"><b>Disclosed:</b> this offline build runs the deterministic FakeQwen transport — the LiveQwen path (transport/live.py) exists behind DASHSCOPE_API_KEY and is not exercised here.</p>
+    <aside class="speaker-notes">The stack isn't decoration — each surface removes a vendor or an unverifiable behavior. And the honest caveat is on the slide: the committed build is the offline FakeQwen transport; the live path exists behind a key. The bench separation is architectural, and we say so.</aside>
+  </section>
+
+  <!-- ═══ 09 · TRACTION ═══ -->
+  <section class="slide" data-idx="8">
+    <p class="slide-tag">09 · Shipped — facts only</p>
+    <h2 style="font-size:62px">Built solo, in a five-project sprint. <em>All of it runs.</em></h2>
+    <div class="trac-grid">
+      <div class="trac-nums">
+        <div class="trac-num"><p class="n">458 <span class="sub">tests · 100% src coverage</span></p><p class="l">full suite ~45 s, entirely offline</p></div>
+        <div class="trac-num"><p class="n">0.99 <span class="sub">vs 0.85 recall@5</span></p><p class="l">committed bench vs naive RAG, same embeddings — floors fail the build on regression</p></div>
+        <div class="trac-num"><p class="n">0 <span class="sub">vs 151 resurfacings</span></p><p class="l">forgetting precision 1.0 across 78 briefs</p></div>
+      </div>
+      <ul class="trac-list">
+        <li><strong>Memory engine</strong> — decay, consolidation, contradiction flags, knapsack packer, citation validator</li>
+        <li><strong>Signed audit</strong> — Ed25519 hash-chained op ledger + ECIES-sealed episodes at rest</li>
+        <li><strong>Reproducibility kit</strong> — <span class="mono">verify_offline.py</span>, byte-identical replay, committed bench results</li>
+        <li><strong>CLI + package</strong> — <span class="mono">lamplight</span> CLI; engine as <span class="mono">lamplight-memory</span> (pip-installable from source), MIT</li>
+        <li><strong>4-stage CI</strong> — ruff · CodeQL · TruffleHog · build, on GitHub Actions</li>
+        <li class="pending"><strong>Honest pending</strong> — Function Compute scaffolded not deployed (<span class="mono">infra/fc/PROOF.md</span>); live Qwen path behind a key; timeline UI deferred</li>
+      </ul>
+    </div>
+    <aside class="speaker-notes">No invented users, no vanity metrics — this is what shipped. Everything on the left is reproducible by a judge in one clone. And the last line lists what is not done, on purpose, with the honest status files to prove it.</aside>
+  </section>
+
+  <!-- ═══ 10 · THE ASK ═══ -->
+  <section class="slide s-ask" data-idx="9">
+    <p class="slide-tag">10 · The ask</p>
+    <div class="ask-grid">
+      <div>
+        <h2 class="ask-title">Run the skeptic's command. <em>Watch it forget.</em></h2>
+        <div class="ask-cmds">
+          <p class="ask-cmd"><span class="p">$</span> git clone https://github.com/edycutjong/lamplight</p>
+          <p class="ask-cmd"><span class="p">$</span> python scripts/verify_offline.py &nbsp;<span class="c"># network off → OFFLINE VERIFY PASS</span></p>
+          <p class="ask-cmd"><span class="p">$</span> lamplight demo &nbsp;<span class="c"># the strikethrough, live</span></p>
+        </div>
+        <p class="ask-closer">Judge it as Track 1 asks: storage, forgetting, recall in a limited window — <b>then flip one byte and watch the chain catch you.</b></p>
+      </div>
+      <div class="ask-card">
+        <img class="lamp" src="../icon.svg" alt="Lamplight lantern icon" />
+        <p class="url">lamplight.edycu.dev</p>
+        <p class="links">
+          <b>github.com/edycutjong/lamplight</b><br/>
+          Track 1 · MemoryAgent · MIT · Edy Cu<br/>
+          Global AI Hackathon with Qwen Cloud
+        </p>
+      </div>
+    </div>
+    <aside class="speaker-notes">The ask is three commands and four minutes. Clone it, run the offline verifier with your Wi-Fi off, then run the demo and watch the resolved item strike through. Memory with mortality attached — thank you.</aside>
+  </section>
+
+</div>
+</div>
+
+<div id="counter">01 / 10</div>
+<div id="hint">← → space · ESC overview · P notes · C contrast</div>
+<div id="notes-panel"><span class="np-label">Notes</span><p class="np-text" id="np-text"></p></div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter = document.getElementById('counter');
+  var npText = document.getElementById('np-text');
+  var cur = 0;
+
+  function show(i){
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, idx){ s.classList.toggle('active', idx === cur); });
+    counter.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    var notes = slides[cur].querySelector('.speaker-notes');
+    npText.textContent = notes ? notes.textContent.trim() : '';
+  }
+
+  function fit(){
+    if (document.body.classList.contains('overview')) return;
+    var vp = document.getElementById('viewport');
+    var s = Math.min(vp.clientWidth / 1920, vp.clientHeight / 1080);
+    document.getElementById('stage').style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); show(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(cur - 1); }
+    else if (e.key === 'Escape') {
+      document.body.classList.toggle('overview');
+      if (!document.body.classList.contains('overview')) fit();
+      else document.getElementById('stage').style.transform = 'none';
+    }
+    else if (e.key === 'p' || e.key === 'P') { document.body.classList.toggle('presenter'); fit(); }
+    else if (e.key === 'c' || e.key === 'C') { document.body.classList.toggle('debug-contrast'); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(slides.length - 1); }
+  });
+
+  /* overview: click a slide to jump */
+  slides.forEach(function(s, idx){
+    s.addEventListener('click', function(){
+      if (document.body.classList.contains('overview')) {
+        document.body.classList.remove('overview');
+        show(idx); fit();
+      }
+    });
+  });
+
+  /* presenter mode: hide cursor after 2s idle */
+  var idleTimer = null;
+  document.addEventListener('mousemove', function(){
+    document.body.classList.remove('idle');
+    clearTimeout(idleTimer);
+    if (document.body.classList.contains('presenter')) {
+      idleTimer = setTimeout(function(){ document.body.classList.add('idle'); }, 2000);
+    }
+  });
+
+  show(0); fit();
+})();
+</script>
+</body>
+</html>

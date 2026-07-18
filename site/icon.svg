@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Lamplight icon">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FDE7BF"/><stop offset="1" stop-color="#F4B860"/>
+    </linearGradient>
+    <radialGradient id="lglow" cx=".5" cy=".42" r=".6">
+      <stop offset="0" stop-color="#F4B860" stop-opacity=".6"/><stop offset="1" stop-color="#F4B860" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lsoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="#101418"/>
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#lglow)">
+    <animate attributeName="opacity" values=".5;1;.5" dur="3.8s" repeatCount="indefinite"/>
+  </rect>
+  <!-- lamp glow halo (breathing) -->
+  <circle cx="256" cy="238" r="120" fill="url(#lg)" opacity=".35" filter="url(#lsoft)">
+    <animate attributeName="r" values="110;136;110" dur="3.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".28;.5;.28" dur="3.8s" repeatCount="indefinite"/>
+  </circle>
+  <!-- lantern: handle + body + base -->
+  <path d="M196 150 Q256 92 316 150" fill="none" stroke="url(#lg)" stroke-width="22" stroke-linecap="round"/>
+  <rect x="176" y="150" width="160" height="196" rx="34" fill="none" stroke="url(#lg)" stroke-width="24"/>
+  <rect x="156" y="360" width="200" height="30" rx="15" fill="url(#lg)"/>
+  <!-- flame -->
+  <path d="M256 200 C286 236 288 268 256 292 C224 268 226 236 256 200 Z" fill="url(#lg)">
+    <animateTransform attributeName="transform" type="scale" values="1 1;1.06 1.1;1 1" dur="1.9s" repeatCount="indefinite" additive="sum"/>
+    <animate attributeName="opacity" values=".85;1;.85" dur="1.9s" repeatCount="indefinite"/>
+  </path>
+  <!-- memory nodes lit by the lamp, twinkling in sequence -->
+  <g fill="#2DD4BF">
+    <circle cx="112" cy="248" r="11"><animate attributeName="opacity" values=".15;1;.15" dur="3s" repeatCount="indefinite"/></circle>
+    <circle cx="400" cy="248" r="11"><animate attributeName="opacity" values=".15;1;.15" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
+    <circle cx="256" cy="444" r="11"><animate attributeName="opacity" values=".15;1;.15" dur="3s" begin="2s" repeatCount="indefinite"/></circle>
+  </g>
+  <g stroke="#2DD4BF" stroke-width="4" stroke-dasharray="6 8" opacity=".55">
+    <path d="M124 248 H176"><animate attributeName="stroke-dashoffset" values="0;-28" dur="1.4s" repeatCount="indefinite"/></path>
+    <path d="M336 248 H388"><animate attributeName="stroke-dashoffset" values="0;-28" dur="1.4s" repeatCount="indefinite"/></path>
+    <path d="M256 390 V432"><animate attributeName="stroke-dashoffset" values="0;-28" dur="1.4s" repeatCount="indefinite"/></path>
+  </g>
+</svg>
