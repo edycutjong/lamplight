@@ -11,7 +11,7 @@ Thanks for your interest in improving Lamplight!
 ## Before You Open a PR
 - `ruff check .` passes.
 - `mypy .` passes (or documents new `continue-on-error` cases).
-- `pytest --cov=src -q` passes — all 456+ tests green.
+- `pytest --cov=src -q` passes — all 458+ tests green.
 - `python scripts/verify_offline.py` passes (no network, no API key).
 - Add or update tests for any behavior change, especially around the invariants (I1-I5) in `tests/test_invariants.py`.
 - Keep commits conventional (`feat:`, `fix:`, `docs:`, `chore:`).

@@ -39,6 +39,9 @@ with TemporaryDirectory() as tmp:
     brief = engine.brief(bed=1, as_of_shift=2)              # hand queue 1 to the next shift
     print(f"Handover brief — queue 1 ({brief.token_count}/{brief.budget} tokens)\n")
     for card in brief.cards:
-        print(f"#{card.priority} [{' '.join('[' + c + ']' for c in card.citations)}] {card.sbar}")
+        # The engine's SBAR renderer speaks its native clinical register
+        # ("Bed N"); in this domain the same slot is a support queue.
+        sbar = card.sbar.replace("B: Bed 1 —", "B: Queue 1 —")
+        print(f"#{card.priority} [{' '.join('[' + c + ']' for c in card.citations)}] {sbar}")
     engine.verify_chain()  # every op is signed and hash-chained, same as the clinical build
     engine.close()

@@ -44,7 +44,7 @@ api = [
 lamplight = "lamplight_memory.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/edycu/lamplight"
+Homepage = "https://github.com/edycutjong/lamplight"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/lamplight_memory"]

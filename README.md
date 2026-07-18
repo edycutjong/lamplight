@@ -16,7 +16,7 @@
   ![Tests](https://img.shields.io/badge/tests-458_passing-success?style=flat)
   ![Coverage](https://img.shields.io/badge/coverage-100%25-success?style=flat)
   ![Offline](https://img.shields.io/badge/demo-offline%2C_zero_keys-blue?style=flat)
-  [![CI](https://github.com/edycu/lamplight/actions/workflows/ci.yml/badge.svg)](https://github.com/edycu/lamplight/actions/workflows/ci.yml)
+  [![CI](https://github.com/edycutjong/lamplight/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/lamplight/actions/workflows/ci.yml)
 </div>
 
 **Track 1 · MemoryAgent.** A cross-shift clinical memory agent: it ingests every
@@ -192,7 +192,7 @@ notes/voice ─▶ qwen3.7-plus extract ─▶ ECIES-seal ─▶ episodic store 
 
 Runtime: FastAPI on Alibaba Function Compute (`api/`, `infra/fc/`); store:
 Supabase/pgvector in the deployed spec, SQLite offline. Full deployed topology:
-[`../ARCHITECTURE.md`](../ARCHITECTURE.md).
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## 📋 Status — what's real, what's pending (honest)
 

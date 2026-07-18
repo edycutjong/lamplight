@@ -17,7 +17,7 @@ verifiable with zero keys and zero network:
 | Deterministic rebuild (I5) | `python scripts/verify_offline.py` | byte-identical hero brief |
 | Signed op-chain (I4) | same script + `lamplight verify-chain` | 187 Ed25519-signed ops |
 | Recall vs naive RAG | `python memory_bench.py` | `bench_results/RESULTS.md` |
-| 456 passing tests | `pytest` | green suite |
+| 458 passing tests | `pytest` | green suite |
 
 ## Intended deploy path (when credentials are available)
 
