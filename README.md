@@ -88,11 +88,11 @@ cd build/
 python -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 
-pytest -q                              # 458 passing, ~45s
-python scripts/verify_offline.py       # network-off replay + chain verify (I4/I5)
-python memory_bench.py                 # regenerate the recall table
-lamplight demo                         # the hero brief in one shot (watch it forget the IV item)
-lamplight replay                       # byte-identical rebuild + chain verify
+pytest -q                         # 458 passing, ~45s
+python scripts/verify_offline.py  # network-off replay + chain verify (I4/I5)
+python memory_bench.py            # regenerate the recall table
+lamplight demo                    # the hero brief in one shot (watch it forget the IV item)
+lamplight replay                  # byte-identical rebuild + chain verify
 ```
 
 **Tests: 458 passing, 100% src coverage.** Everything above runs on the deterministic FakeQwen
@@ -243,14 +243,14 @@ Supabase/pgvector in the deployed spec, SQLite offline. Full deployed topology:
 ## ✅ Testing & CI
 
 ```bash
-ruff check .                                  # lint (clean)
-mypy .                                        # types (advisory — LiveQwen's
-                                               # OpenAI-shaped overloads + a
-                                               # few Optional narrowings)
-pytest --cov=src --cov-report=term -q         # 458 passing, 100% src coverage
-python scripts/verify_offline.py              # network-off replay + chain verify
-python -m build                               # sdist + wheel, CLI entrypoint installs
-pip-audit                                     # dependency vulnerability scan
+ruff check .                            # lint (clean)
+mypy .                                  # types (advisory — LiveQwen's
+                                        # OpenAI-shaped overloads + a
+                                        # few Optional narrowings)
+pytest --cov=src --cov-report=term -q   # 458 passing, 100% src coverage
+python scripts/verify_offline.py        # network-off replay + chain verify
+python -m build                         # sdist + wheel, CLI entrypoint installs
+pip-audit                               # dependency vulnerability scan
 ```
 
 | Layer | Tool | Status |
