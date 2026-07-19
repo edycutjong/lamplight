@@ -22,7 +22,12 @@ lamplight.db
 # Secrets
 .env
 .env.*
+!.env.example
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Alibaba Function Compute build artifacts (s build --use-docker output)
+/python/
+.s/

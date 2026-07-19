@@ -1,53 +1,45 @@
-# Serverless Devs spec for deploying the Lamplight API to Alibaba Function
-# Compute (HTTP-triggered, Python 3.12 custom runtime).
+# Serverless Devs (s.yaml) — Lamplight on Alibaba Function Compute 3.0.
 #
-# STATUS: scaffold, NOT deployed in this timebox (see PROOF.md). The command
-# sequence below is the intended path; `s deploy` requires Alibaba Cloud
-# credentials (ALIBABA_CLOUD_ACCESS_KEY_ID / _SECRET) and a configured region.
+# MANAGED python3.10 runtime (no container / no ACR / no real-name verification).
+# Lamplight targets 3.12 and uses enum.StrEnum (3.11+); infra/fc/wsgi.py shims it
+# before importing the package, so the app runs unchanged on the 3.10 runtime.
 #
-#   npm i -g @serverless-devs/s
-#   s deploy               # provisions the function + HTTP trigger
-#   s invoke -e '{}'       # smoke test
+#   s build --use-docker   # installs requirements.txt into ./python
+#   s deploy               # zips code + creates the fn + HTTP trigger
 #
+# Endpoints (anonymous HTTP trigger — offline / zero-key / zero-network):
+#   GET /verify   socket-guarded byte-identical replay + signed op-chain verify
+#   GET /run      one deterministic offline handover brief
+#   GET /health   liveness
+
 edition: 3.0.0
-name: lamplight
+name: lamplight-fc
 access: default
 
 vars:
-  region: ap-southeast-1                 # Singapore (intl DashScope endpoint)
-  functionName: lamplight-brief
+  region: ap-southeast-1
 
 resources:
   lamplight:
     component: fc3
     props:
       region: ${vars.region}
-      functionName: ${vars.functionName}
-      description: "Lamplight cross-shift memory brief builder (SYNTHETIC DATA ONLY)"
-      runtime: custom.debian10
-      cpu: 0.5
-      memorySize: 1024
+      functionName: lamplight
+      description: "Lamplight — cross-shift handover memory engine (Qwen Cloud, SYNTHETIC DATA ONLY)"
+      runtime: python3.10
+      handler: infra.fc.wsgi.handler
+      cpu: 0.35
+      memorySize: 512
       diskSize: 512
       timeout: 60
-      code: ./                           # build/ root (src/ + fixtures/ + api/)
-      customRuntimeConfig:
-        command:
-          - uvicorn
-        args:
-          - api.main:app
-          - --host
-          - "0.0.0.0"
-          - --port
-          - "9000"
-        port: 9000
+      instanceConcurrency: 5
+      # code root = the build dir (this file lives in infra/fc/).
+      code: ../../
       environmentVariables:
-        PYTHONPATH: /code/src
-        # Secrets are injected by FC env config, never committed:
-        #   DASHSCOPE_API_KEY          (LiveQwen transport; omit for offline demo)
-        #   LAMPLIGHT_SIGNING_SEED_HEX (Ed25519 op-chain signer; pubkey committed)
-        #   LAMPLIGHT_SEAL_SEED_HEX    (ECIES episode sealing)
+        # s build installs requirements.txt deps under /code/python
+        PYTHONPATH: /code/python
       triggers:
-        - triggerName: httpTrigger
+        - triggerName: http
           triggerType: http
           triggerConfig:
             authType: anonymous
