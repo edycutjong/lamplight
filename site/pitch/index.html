@@ -535,7 +535,8 @@ body.overview #counter,body.overview #hint,body.overview #notes-panel{display:no
         <li><strong>Reproducibility kit</strong> — <span class="mono">verify_offline.py</span>, byte-identical replay, committed bench results</li>
         <li><strong>CLI + package</strong> — <span class="mono">lamplight</span> CLI; engine as <span class="mono">lamplight-memory</span> (pip-installable from source), MIT</li>
         <li><strong>4-stage CI</strong> — ruff · CodeQL · TruffleHog · build, on GitHub Actions</li>
-        <li class="pending"><strong>Honest pending</strong> — Function Compute scaffolded not deployed (<span class="mono">infra/fc/PROOF.md</span>); live Qwen path behind a key; timeline UI deferred</li>
+        <li><strong>Deployed on Alibaba Function Compute</strong> — managed python3.10, live at <span class="mono">lamplight-asvskcmpbg.ap-southeast-1.fcapp.run</span> (<span class="mono">/health</span> · <span class="mono">/verify</span> · <span class="mono">/run</span>)</li>
+        <li class="pending"><strong>Honest pending</strong> — live Qwen path verified with a real DashScope call (smoke) but full captured run behind a key; timeline UI deferred</li>
       </ul>
     </div>
     <aside class="speaker-notes">No invented users, no vanity metrics — this is what shipped. Everything on the left is reproducible by a judge in one clone. And the last line lists what is not done, on purpose, with the honest status files to prove it.</aside>

@@ -7,6 +7,7 @@
   <br/><br/>
 
   [![Live](https://img.shields.io/badge/%F0%9F%8F%AE_Live-lamplight.edycu.dev-06b6d4?style=for-the-badge)](https://lamplight.edycu.dev)
+  [![Live on Alibaba Function Compute](https://img.shields.io/badge/Alibaba_Function_Compute-Deployed-FF6A00?style=for-the-badge&logo=alibabacloud&logoColor=white)](https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run/health)
   [![Pitch Deck](https://img.shields.io/badge/%F0%9F%93%BD%EF%B8%8F_Pitch-Deck-f59e0b?style=for-the-badge)](https://lamplight.edycu.dev/pitch/)
   [![Demo Path](https://img.shields.io/badge/%F0%9F%95%B9%EF%B8%8F_Judge-Demo_Path-F59E0B?style=for-the-badge)](DEMO.md)
   [![QwenCloud Hackathon](https://img.shields.io/badge/QwenCloud-Track_1_MemoryAgent-8b5cf6?style=for-the-badge)](https://qwencloud-hackathon.devpost.com/)
@@ -182,7 +183,7 @@ flowchart LR
   TT --> LQ["LiveQwen — qwen3.7-plus · text-embedding-v4 · qwen3-rerank · fun-asr"]
 ```
 
-<sub>**As built** = offline runs on FakeQwen hash-embeddings (the bench separation comes from the memory architecture, not embedding quality); live mode uses real `text-embedding-v4` + `qwen3-rerank` behind `DASHSCOPE_API_KEY`. Store is SQLite offline / Supabase-pgvector in the deployed spec; Function Compute scaffolded (`api/`, `infra/fc/`), not deployed. Plain-text view below.</sub>
+<sub>**As built** = offline runs on FakeQwen hash-embeddings (the bench separation comes from the memory architecture, not embedding quality); live mode uses real `text-embedding-v4` + `qwen3-rerank` behind `DASHSCOPE_API_KEY`. Store is SQLite offline / Supabase-pgvector in the deployed spec; **deployed live on Alibaba Function Compute** (`infra/fc/`, managed python3.10). Plain-text view below.</sub>
 
 ```
 notes/voice ─▶ qwen3.7-plus extract ─▶ ECIES-seal ─▶ episodic store (text-embedding-v4)
@@ -192,9 +193,28 @@ notes/voice ─▶ qwen3.7-plus extract ─▶ ECIES-seal ─▶ episodic store 
       handover query ─▶ top-40 ─▶ qwen3-rerank ─▶ budget knapsack (≤2k) ─▶ citation validator ─▶ SBAR brief
 ```
 
-Runtime: FastAPI on Alibaba Function Compute (`api/`, `infra/fc/`); store:
+Runtime: Alibaba Function Compute (`infra/fc/`, managed python3.10); store:
 Supabase/pgvector in the deployed spec, SQLite offline. Full deployed topology:
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## ☁️ Deployed — live on Alibaba Function Compute
+
+Lamplight is **deployed live on Alibaba Function Compute** (managed
+`python3.10` runtime — no container, no image registry):
+
+**`https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run`**
+
+| Endpoint | What it does |
+|---|---|
+| [`GET /health`](https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run/health) | liveness → `{"status":"ok"}` |
+| [`GET /verify`](https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run/verify) | socket-guarded byte-identical replay + signed op-chain verify (I4/I5) — the invariant proof, running in the cloud |
+| [`GET /run?bed=9&shift=15`](https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run/run?bed=9&shift=15) | one deterministic offline handover brief (FakeQwen, no key) |
+
+The deployed and graded path is the **offline-deterministic engine** (FakeQwen,
+byte-for-byte replayable) — `/verify` installs a socket guard and reproduces the
+committed hero brief *in the cloud*. The live Qwen Cloud path (`qwen3.7-plus` +
+`text-embedding-v4` + `qwen3-rerank` + `fun-asr`) is wired and **verified with a
+real DashScope call** (smoke); a full captured live run is key-gated.
 
 ## 📋 Status — what's real, what's pending (honest)
 
@@ -210,13 +230,19 @@ Supabase/pgvector in the deployed spec, SQLite offline. Full deployed topology:
 - ✅ `lamplight` CLI, `verify_offline.py`, `check_submission_readiness.py`.
 - ✅ 458 passing tests, 100% `lamplight_memory` coverage.
 
+**Landed:**
+- ✅ **Deployed live on Alibaba Function Compute** (managed python3.10) at
+  `https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run` — `/health`, `/verify`
+  (socket-guarded replay + op-chain verify in the cloud), `/run` (handover
+  brief). Scaffold + status in `infra/fc/`.
+
 **Pending / behind a key / deferred:**
-- ⏳ **Live Qwen** (`text-embedding-v4`, `qwen3-rerank`, `qwen3.7-plus`,
+- ⏳ **Full live-Qwen run** (`text-embedding-v4`, `qwen3-rerank`, `qwen3.7-plus`,
   `fun-asr`): code path present in `transport/live.py`, runs behind
-  `DASHSCOPE_API_KEY`, **not exercised in this offline build**. Rerank + fun-asr
-  request shapes are best-effort (`docs/friction-log.md §7`).
-- ⏳ **Function Compute deployment**: scaffolded (`infra/fc/s.yaml`), **not
-  deployed** — honest status in `infra/fc/PROOF.md`. API runs locally.
+  `DASHSCOPE_API_KEY`. The live model path is wired and **verified with a real
+  DashScope call** (smoke), but **no full captured live run** is in this build —
+  the deployed and graded path is the offline-deterministic engine. Rerank +
+  fun-asr request shapes are best-effort (`docs/friction-log.md §7`).
 - ⏳ **Next.js timeline UI**: deferred. An optional static `web/brief.html`
   renderer of the hero brief is included; the full timeline/feedback UI is not
   built.
@@ -236,9 +262,9 @@ Supabase/pgvector in the deployed spec, SQLite offline. Full deployed topology:
 2. **Ground-truth tightened.** The cefazolin thread's evidence excludes the
    shift-4 med-start order (surfacing "cefazolin started" ≠ conveying the
    reaction); `seed.py --check` enforces fixture/source parity. (`§3`.)
-3. **UI + FC deferred** as above — the memory engine and its bench are the
-   submission's spine, per BUILD_PLAN ("never cut: bench, citations validator,
-   decay/retire, replay").
+3. **Next.js timeline UI deferred** as above — the memory engine and its bench
+   are the submission's spine, per BUILD_PLAN ("never cut: bench, citations
+   validator, decay/retire, replay"). Function Compute is now deployed live.
 
 ## ✅ Testing & CI
 
@@ -282,7 +308,7 @@ build/
 ├── examples/support_handover.py     domain-agnostic reuse (~15 lines)
 ├── scripts/                verify_offline.py, check_submission_readiness.py
 ├── api/main.py             FastAPI app (FC-ready)
-├── infra/fc/               s.yaml + PROOF.md (deployment status: honest)
+├── infra/fc/               s.yaml + wsgi.py + PROOF.md (deployed live on FC)
 ├── docs/friction-log.md    calibration + deviation notes
 ├── .github/                CI/CD, CodeQL, Dependabot, community health files
 ├── .env.example            documented optional env vars
