@@ -29,7 +29,7 @@ from .tokens import approx_tokens
 from .transport import FakeQwen, Transport, get_transport
 from .validator import CitationValidator, ValidationResult
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 __all__ = [
     "__version__",

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lamplight-memory"
-version = "1.1.0"
+version = "1.2.0"
 description = "Domain-agnostic shift-handover memory engine: episodic store, decay classes, consolidation, token-budget briefs with mechanical citation validation, and a signed hash-chained op ledger."
 readme = "README.md"
 license = { text = "MIT" }
