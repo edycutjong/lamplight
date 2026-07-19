@@ -27,14 +27,14 @@ import sys
 # --- 3.10 compat shims: must run before any lamplight_memory import ----------
 # enum.StrEnum (3.11+): str+Enum, byte-identical behaviour.
 if not hasattr(enum, "StrEnum"):
-    class StrEnum(str, enum.Enum):  # noqa: D401 - drop-in for 3.11 enum.StrEnum
+    class StrEnum(str, enum.Enum):  # noqa: D401,UP042 - 3.11 enum.StrEnum polyfill for the 3.10 runtime
         def __str__(self) -> str:
             return str(self.value)
     enum.StrEnum = StrEnum  # type: ignore[attr-defined]
 
 # datetime.UTC (3.11+): alias of timezone.utc — clock.py does `from datetime import UTC`.
 if not hasattr(_datetime, "UTC"):
-    _datetime.UTC = _datetime.timezone.utc  # type: ignore[attr-defined]
+    _datetime.UTC = _datetime.timezone.utc  # type: ignore[attr-defined]  # noqa: UP017
 
 # The package ships under src/ in the deployed code bundle.
 _HERE = os.path.dirname(os.path.abspath(__file__))
