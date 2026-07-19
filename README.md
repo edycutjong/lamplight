@@ -9,6 +9,7 @@
   [![Live](https://img.shields.io/badge/%F0%9F%8F%AE_Live-lamplight.edycu.dev-06b6d4?style=for-the-badge)](https://lamplight.edycu.dev)
   [![Live on Alibaba Function Compute](https://img.shields.io/badge/Alibaba_Function_Compute-Deployed-FF6A00?style=for-the-badge&logo=alibabacloud&logoColor=white)](https://lamplight-asvskcmpbg.ap-southeast-1.fcapp.run/health)
   [![Watch Demo](https://img.shields.io/badge/%E2%96%B6_Watch-Demo_Video-FF0000?style=for-the-badge)](https://youtu.be/Pyy5bAwCCVM)
+  [![Devpost](https://img.shields.io/badge/Devpost-Submission-003E54?style=for-the-badge&logo=devpost)](https://devpost.com/software/lamplight-5z8f03)
   [![Pitch Deck](https://img.shields.io/badge/%F0%9F%93%BD%EF%B8%8F_Pitch-Deck-f59e0b?style=for-the-badge)](https://lamplight.edycu.dev/pitch/)
   [![Demo Path](https://img.shields.io/badge/%F0%9F%95%B9%EF%B8%8F_Judge-Demo_Path-F59E0B?style=for-the-badge)](DEMO.md)
   [![QwenCloud Hackathon](https://img.shields.io/badge/QwenCloud-Track_1_MemoryAgent-8b5cf6?style=for-the-badge)](https://qwencloud-hackathon.devpost.com/)
